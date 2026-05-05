@@ -283,7 +283,7 @@ Jeans:
 	OTMPDIR=$$(mktemp -d obj_XXXXXX) ;\
 	RUNDIR=$(RUNS_DIR)/jeans_$${OTMPDIR//obj_/} ;\
 	[ ! -e $(ARTIFACTS) ] && mkdir -p $(ARTIFACTS) ;\
-	$(SETUP) jeans -o $${OTMPDIR//obj_/} -o $${OTMPDIR//obj_/} > $(ARTIFACTS)/Jeans.setup.stdout && \
+	$(SETUP) jeans -o $${OTMPDIR//obj_/} > $(ARTIFACTS)/Jeans.setup.stdout && \
 		( cd $${RUNDIR} ;\
 			$(MPIEXEC) -n 1 ./piernik ;\
 			gnuplot jeans.gnuplot 2>&1 || exit 1 ;\
