@@ -29,7 +29,6 @@
 !! Main program
 !<
 program hello_world
-! pulled by ANY
 ! overrides src/base/piernik.F90
 
    use MPIF, only: MPI_COMM_WORLD

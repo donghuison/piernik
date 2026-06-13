@@ -33,7 +33,6 @@
 !!    sources, i.e. PBS
 !<
 module signalhandler
-! pulled by ANY
 
    implicit none
 

@@ -34,7 +34,6 @@
 !! scripts which uses it.
 !<
 module piernik_mpi_sig
-! pulled by ANY
    implicit none
    public :: sig
    private

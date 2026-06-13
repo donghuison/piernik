@@ -26,7 +26,6 @@
 !
 #include "piernik.h"
 module fluids_pub
-! pulled by ANY
    implicit none
    public    ! QA_WARN nothing to hide here
 

@@ -45,7 +45,6 @@
 
 module sweeps
 
-! pulled by ANY
 
    implicit none
 

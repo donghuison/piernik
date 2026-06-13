@@ -32,7 +32,6 @@
 !<
 
 module bfc_bcc
-! pulled by ANY
 
    implicit none
 

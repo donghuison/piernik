@@ -43,7 +43,6 @@
 !<
 
 module fluidindex
-! pulled by ANY
    use constants,  only: ndims
    use fluidtypes, only: var_numbers
 

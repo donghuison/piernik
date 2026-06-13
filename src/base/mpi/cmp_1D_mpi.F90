@@ -34,7 +34,6 @@
 !<
 
 module cmp_1D_mpi
-! pulled by ANY
 
    implicit none
 

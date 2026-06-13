@@ -34,7 +34,6 @@
 !!
 !<
 module fargo
-! pulled by ANY
    implicit none
 
    private

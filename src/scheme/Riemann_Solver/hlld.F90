@@ -45,7 +45,6 @@
 
 module hlld
 
-! pulled by ANY
 
    implicit none
 

@@ -28,7 +28,6 @@
 
 module unsplit_mag_modules
 
-! pulled by ANY
 
    implicit none
 

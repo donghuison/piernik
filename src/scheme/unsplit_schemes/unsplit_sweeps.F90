@@ -35,7 +35,6 @@
 
 module unsplit_sweeps
 
-! pulled by ANY
 
    implicit none
 

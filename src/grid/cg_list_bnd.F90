@@ -43,7 +43,6 @@
 
 module cg_list_bnd
 
-! pulled by ANY
 
    use cg_list_dataop,   only: cg_list_dataop_t
    use level_essentials, only: level_t

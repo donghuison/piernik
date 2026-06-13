@@ -30,7 +30,6 @@
 !! \brief Modules of blank boundary conditions (default and user types) and their initialization
 !<
 module fluidboundaries_funcs
-! pulled by ANY
 
    implicit none
 
