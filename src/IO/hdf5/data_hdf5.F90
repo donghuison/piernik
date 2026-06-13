@@ -493,10 +493,10 @@ contains
             read(var,'(A4,I2.2)') aux, i !> \deprecated BEWARE 0 <= i <= 99, no other indices can be dumped to hdf file
             tab(:,:,:) = cg%w(wna%ind(dfpq%q_nam))%arr(i,RNG)  !flind%cre%fbeg+i-1, RNG)
 #endif /* CRESP */
-#ifdef TRACER
          case ("trcr")
+            ! How to show second tracer?
+            ! What if no tracers are there?
             tab(:,:,:) = cg%u(flind%trc%beg, RNG)
-#endif /* TRACER */
          case ("dend", "deni", "denn")
             if (associated(fl_dni)) tab(:,:,:) = cg%u(fl_dni%idn, RNG)
          case ("vlxd", "vlxn", "vlxi", "vlyd", "vlyn", "vlyi", "vlzd", "vlzn", "vlzi")

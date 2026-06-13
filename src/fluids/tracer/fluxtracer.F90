@@ -51,7 +51,7 @@
 !<
 !*/
 module fluxtracer
-! pulled by TRACER
+
    implicit none
    private
    public :: flux_tracer
