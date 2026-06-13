@@ -155,7 +155,7 @@ contains
          case ("gpot", "sgpt")
             f%fu = "\rm{cm}^2 / \rm{s}^2"
             f%f2cgs = 1.0 / (cm**2 / sek**2)
-         case ("trcr")
+         case ("tracer_00" : "tracer_99")  ! depends on inittracer::tracers_max
       end select
    end function datafields_descr
 
@@ -351,6 +351,7 @@ contains
       use fluidtypes,       only: component_fluid
       use func,             only: ekin, emag, sq_sum3
       use grid_cont,        only: grid_container
+      use inittracer,       only: iarr_trc
       use mpisetup,         only: proc
 #ifdef MAGNETIC
       use constants,        only: xdim, ydim, zdim, half, two, I_TWO, I_FOUR, I_SIX, I_EIGHT
@@ -380,11 +381,11 @@ contains
       class(component_fluid), pointer                :: fl_dni, fl_mach
       integer(kind=4)                                :: i_xyz
       integer                                        :: ii, jj, kk
-#ifdef COSM_RAYS
-      integer(kind=4)                                :: clast
       integer                                        :: i
       integer, parameter                             :: auxlen = dsetnamelen - 1
       character(len=auxlen)                          :: aux
+#ifdef COSM_RAYS
+      integer(kind=4)                                :: clast
       character(len=I_TWO)                           :: varn2
 #endif /* COSM_RAYS */
 #ifdef CRESP
@@ -493,10 +494,9 @@ contains
             read(var,'(A4,I2.2)') aux, i !> \deprecated BEWARE 0 <= i <= 99, no other indices can be dumped to hdf file
             tab(:,:,:) = cg%w(wna%ind(dfpq%q_nam))%arr(i,RNG)  !flind%cre%fbeg+i-1, RNG)
 #endif /* CRESP */
-         case ("trcr")
-            ! How to show second tracer?
-            ! What if no tracers are there?
-            tab(:,:,:) = cg%u(flind%trc%beg, RNG)
+         case ("tracer_00" : "tracer_99")  ! Beware: depends on inittracer::tracers_max
+            read(var,'(A7,I2.2)') aux, i
+            tab(:,:,:) = cg%u(iarr_trc(i), RNG)
          case ("dend", "deni", "denn")
             if (associated(fl_dni)) tab(:,:,:) = cg%u(fl_dni%idn, RNG)
          case ("vlxd", "vlxn", "vlxi", "vlyd", "vlyn", "vlyi", "vlzd", "vlzn", "vlzi")
