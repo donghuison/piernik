@@ -40,16 +40,20 @@
 
 module inittracer
 
+   use constants, only: INT4
    implicit none
 
    private
    public :: init_tracer, cleanup_tracer, tracer_index, iarr_trc, trace_fluid, tracers_max, ntracers
 
-   integer(kind=4), dimension(:), allocatable :: iarr_trc     !< Array of indices to tracers
-   integer(kind=4), dimension(:), allocatable :: trace_fluid  !< Which fluid to trace? Currently possible: ionized, neutral, dust
-   integer(kind=4), protected :: ntracers                     !< Number of tracers
-   integer, parameter :: tracers_max = 10                     !< Maximum allowed number of tracer fluids (arbitrary, some hardcoded bits in data_hdf5 depend on it)
+   integer(kind=INT4), dimension(:), allocatable :: iarr_trc     !< Array of indices to tracers
+   integer(kind=INT4), dimension(:), allocatable :: trace_fluid  !< Which fluid to trace? Currently possible: ionized, neutral, dust
+   integer(kind=INT4), protected :: ntracers                     !< Number of tracers
+   integer(kind=INT4), parameter :: tracers_max = 10_INT4        !< Maximum allowed number of tracer fluids (arbitrary, some hardcoded bits in data_hdf5 depend on it)
 
+   ! Note: trace_fluid is allocatable and listed in FLUID_TRACER. It MUST be allocated
+   ! before any read(nml=FLUID_TRACER) statement, otherwise the read will target an
+   ! unallocated array and crash. See init_tracer.
    namelist /FLUID_TRACER/ ntracers, trace_fluid
 
 contains
@@ -73,7 +77,7 @@ contains
    subroutine init_tracer(num_fluids)
 
       use bcast,      only: piernik_MPI_Bcast
-      use constants,  only: INT4, V_INFO
+      use constants,  only: V_INFO
       use dataio_pub, only: warn, nh, die, printinfo, msg
       use mpisetup,   only: master, slave, ibuff
 
@@ -84,7 +88,7 @@ contains
       integer :: i
 
       if (tracers_max > ubound(ibuff, 1) - 1) call die("[inittracer:init_tracer] Too big tracers_max value - the trace fluid array would not fit ibuff array.")
-      allocate(trace_fluid(tracers_max))
+      allocate(trace_fluid(tracers_max))  ! must precede namelist read; see module-level note
 
       ntracers = 0_INT4  ! no tracer fluid by default
       trace_fluid = 1_INT4  ! trace first fluid by default
@@ -114,8 +118,8 @@ contains
 
       if (slave) then
 
-         ntracers    = int(ibuff(1), kind=4)
-         trace_fluid = int(ibuff(2:1+tracers_max), kind=4)
+         ntracers    = int(ibuff(1), kind=INT4)
+         trace_fluid = int(ibuff(2:1+tracers_max), kind=INT4)
 
       endif
 
@@ -177,7 +181,7 @@ contains
       flind%all      = flind%all + flind%trc%all
       flind%trc%end  = flind%all
 
-      iarr_trc = int([(i, i = 0, ntracers-1)], kind=4) + flind%trc%beg
+      if (ntracers > 0) iarr_trc = int([(i, i = 0, ntracers-1)], kind=INT4) + flind%trc%beg
 
       ! Tracer index position is set to -1 since tracers are initialized last
       ! and no other components depend on their index position
