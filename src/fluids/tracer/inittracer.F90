@@ -152,6 +152,7 @@ contains
       implicit none
 
       if (allocated(iarr_trc)) deallocate(iarr_trc)
+      if (allocated(trace_fluid)) deallocate(trace_fluid)
 
    end subroutine cleanup_tracer
 
