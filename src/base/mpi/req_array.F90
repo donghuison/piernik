@@ -76,7 +76,7 @@ module req_array
       enumerator :: C_REQA = 1, C_REQS  ! for both req% waitall methods
    end enum
 
-   real :: longest_wall  ! find the extreme Waital completion time
+   real :: longest_wall  ! find the extreme Waitall completion time
 
    integer(kind=4) :: err_mpi  !< error status
 
@@ -135,7 +135,7 @@ contains
 
    end subroutine cleanup_wall
 
-!> \brief provide next free request
+!> \brief Provide next free request
 
    function nxt(this)
 
@@ -156,7 +156,7 @@ contains
 
    end function nxt
 
-!> \brief clean up
+!> \brief Clean up allocated resources
 
    subroutine cleanup(this)
 
@@ -175,7 +175,7 @@ contains
 
    end subroutine cleanup
 
-!> brief Accumulate tags for inspection
+!> \brief Accumulate tags for inspection
 
    subroutine store_tag(this, tag, other_proc, recv)
 
@@ -211,9 +211,9 @@ contains
 !! \brief Code common for waitall_on_some and req_ppp::waitall_ppp
 !!
 !! \details Use positive waitall_timeout if you experienced deadlocks in your runs.
-!! With waitall_timeout > 0. this routine won't call MPI_Waitall, which is blocking
-!! but will use nonblocking MPI_Test* calls instead. Chances are that some useful hints
-!! will be printed on the stdout instead of going into silent deadlock.
+!! With waitall_timeout > 0, this routine uses non-blocking MPI_Test calls instead of
+!! MPI_Waitall, which is blocking. Useful diagnostic information will be printed to stdout
+!! instead of hanging silently.
 !<
 
    subroutine waitall_wrapper(this, ind, label)
@@ -252,7 +252,7 @@ contains
          warn10 = .false.
          call req_wall%add(int([ind]), int(this%n, kind=LONG))
          t0 = MPI_Wtime()
-         if (waitall_timeout > 0.) then  ! complete requests in a non-blocking way, print somediagnostics if completion is slow
+         if (waitall_timeout > 0.) then  ! complete requests in a non-blocking way, print diagnostics if completion is slow
             allocate(inds(this%n))
             inds(:) = -1
 
@@ -282,7 +282,7 @@ contains
 
                ! Test remaining requests
                call MPI_Testsome(this%n, this%r(:this%n), tcnt, inds(cnt_prev+1:), MPI_STATUSES_IGNORE, err_mpi)
-               if ((tcnt < 0 .and. tcnt /= MPI_UNDEFINED) .or. cnt_prev < 0. .or. err_mpi /= 0) then
+               if ((tcnt < 0 .and. tcnt /= MPI_UNDEFINED) .or. cnt_prev < 0 .or. err_mpi /= 0) then
                   write(msg, '(a,4(" ",i0),a)')"[req_array:waitall_wrapper] MPI_Testsome failing?", tcnt, cnt_prev, this%n, err_mpi, " '" // trim(label) // "'"
                   call die(msg)
                endif
@@ -411,7 +411,7 @@ contains
 
    end subroutine waitall_wrapper
 
-!> \brief Initialize by setting the size of this%r(:) array for non-blocking communication on request.
+!> \brief Set the initial size of this%r array for non-blocking communication
 
    subroutine setsize_req(this, nreq, owncomm, label)
 
@@ -422,7 +422,7 @@ contains
       implicit none
 
       class(req_arr),             intent(inout) :: this     !< an object invoking the type-bound procedure
-      integer(kind=4),            intent(in)    :: nreq     !< expected maximum number of concurrent MPI requests in non-blocking parts of the code
+      integer(kind=4),            intent(in)    :: nreq     !< maximum number of concurrent MPI requests
       logical,                    intent(in)    :: owncomm  !< operate on own communicator, duplicated from MPI_COMM_WORLD
       character(len=*), optional, intent(in)    :: label    !< identification
 
@@ -446,7 +446,7 @@ contains
          if (this%owncomm) then
             call die("[req_array:setsize_req] communicator already duplicated")
          else
-            call MPI_Comm_dup(MPI_COMM_WORLD, this%comm, err_mpi)  ! create a separate duplicate
+            call MPI_Comm_dup(MPI_COMM_WORLD, this%comm, err_mpi)  ! create a duplicate communicator
             this%owncomm = .true.
          endif
       endif
@@ -455,9 +455,9 @@ contains
    end subroutine setsize_req
 
 !>
-!! \brief Double size of this%r(:) array for non-blocking communication on request.
+!> \brief Double the size of this%r array for non-blocking communication
 !!
-!! \details Perform a resize by a factor of 2. Save existing values stored in this%r(:).
+!! \details Resize by a factor of 2, preserving existing values in this%r.
 !<
 
    subroutine doublesize_req(this, owncomm, label)
@@ -473,7 +473,7 @@ contains
       logical,                    intent(in)    :: owncomm  !< operate on own communicator, duplicated from MPI_COMM_WORLD
       character(len=*), optional, intent(in)    :: label    !< identification
 
-      !< new request array for MPI_Waitall
+      ! new request array for MPI_Waitall
 #ifdef MPIF08
       type(MPI_Request), allocatable, dimension(:) :: new_req
 #else /* !MPIF08 */

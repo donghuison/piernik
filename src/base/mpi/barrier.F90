@@ -70,7 +70,7 @@ contains
 !>
 !! \brief Wrapper for MPI_Barrier
 !!
-!! This rourine can be calles only by all processes or deadlock will occur.
+!! This routine has to be called by all processes or deadlock will occur.
 !<
 
    subroutine piernik_MPI_Barrier

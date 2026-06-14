@@ -47,7 +47,7 @@ module tag_array
 
 contains
 
-!> \brief clean up
+!> \brief Clean up stored tags and free resources
 
    subroutine cleanup(this, label)
 
@@ -68,7 +68,7 @@ contains
 
    end subroutine cleanup
 
-!> brief Accumulate tags for inspection
+!> \brief Accumulate tags for inspection
 
    subroutine store_tag(this, tag, other_proc, n)
 

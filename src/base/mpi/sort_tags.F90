@@ -27,7 +27,7 @@
 
 #include "piernik.h"
 
-!> \brief Module that contains a definition of sortable list of MPI tags
+!> \brief Module defining sortable MPI tags and request data
 
 module sort_tags
 
@@ -84,10 +84,10 @@ contains
          call move_alloc(from=new_list, to=this%list)
       endif
 
-      if (.not. allocated(this%list)) call die("[sort_tags:dump] not allocated")  ! should never happen
+      if (.not. allocated(this%list)) call die("[sort_tags:dump] list not allocated")  ! allocation error
 
       this%cnt = this%cnt + 1
-      if (this%cnt < this%l_bound() .or. this%cnt > ubound(this%list, dim=1)) call die("[sort_tags:dump] run out of space")  ! perhaps can happen after undetected allocation error
+      if (this%cnt < this%l_bound() .or. this%cnt > ubound(this%list, dim=1)) call die("[sort_tags:dump] list capacity exceeded")  ! index out of bounds
       this%list(this%cnt) = el
 
    end subroutine dump
@@ -108,7 +108,7 @@ contains
    end subroutine cleanup
 
 !>
-!! \brief Tell if element at position a is greater than element at position b.
+!! \brief Check if element at position a is greater than element at position b
 !! When the position equals temp_index, use temporary storage.
 !<
 
