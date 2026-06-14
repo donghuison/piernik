@@ -58,7 +58,6 @@ module fluxtracer
 
 contains
 
-#define RNG2 2:nm
    !>
    !! \brief Compute tracer flux
    !!
@@ -72,14 +71,19 @@ contains
       real, dimension(:), intent(in),    pointer :: uut    !< tracer mass density
       real, dimension(:), intent(in),    pointer :: vx     !< velocity component for current sweep direction
 
-      integer :: n, nm
+      integer :: n
 
-      n = size(fluxt,1); nm = n-1
+      n = size(fluxt, 1)
 
-      fluxt(RNG2) = uut(RNG2) * vx(RNG2)
-      fluxt(1)    = fluxt(2); fluxt(n) = fluxt(nm)
+      associate (nm => n - 1)
+         ! Compute flux in the interior domain
+         fluxt(2:nm) = uut(2:nm) * vx(2:nm)
+
+         ! Set boundary values to match the innermost layer
+         fluxt(1) = fluxt(2)
+         fluxt(n) = fluxt(nm)
+      end associate
 
    end subroutine flux_tracer
-#undef RNG2
 
 end module fluxtracer
