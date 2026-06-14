@@ -26,7 +26,7 @@
 !
 #include "piernik.h"
 
-!> \brief This module serves an array of prime numbers. Used primarily in decomposition module.
+!> \brief This module provides a table of prime numbers, primarily used in the decomposition module.
 
 module primes_utils
 
@@ -42,7 +42,7 @@ module primes_utils
    contains
       procedure :: sieve                                !< routine used to initialize (and extend if necessary) the table of prime numbers
       procedure :: erase                                !< restore initial state
-      procedure, private :: print                       !< print what was found
+      procedure, private :: print_summary               !< print what was found
    end type primes_t
 
 contains
@@ -72,9 +72,9 @@ contains
          deallocate(this%tab)
       endif
 
-      if (n < 1) call die("[primes:sieve] Prime numbers are usually greater than 1 ...")
+      if (n < 1) call die("[primes:sieve] Prime numbers are typically greater than 1 ...")
 
-      ! The sieve
+      ! Apply Eratosthenes sieve
       numb = [I_ZERO, (i, i = I_TWO, n)]
       do i = 2, n
          if (numb(i) /= 0) numb( 2*i : n : i ) = 0
@@ -86,14 +86,14 @@ contains
       this%max = n
 
 #ifdef DEBUG
-      call this%print
+      call this%print_summary
 #endif /* DEBUG */
 
    end subroutine sieve
 
-!> \brief Print the table of found primes
+!> \brief Print summary of found primes
 
-   subroutine print(this)
+   subroutine print_summary(this)
 
       use constants,  only: V_DEBUG, fmt_len
       use dataio_pub, only: msg, printinfo
@@ -119,7 +119,7 @@ contains
          call printinfo(msg, V_DEBUG)
       endif
 
-   end subroutine print
+   end subroutine print_summary
 
 !> \brief Restore initial state
 
