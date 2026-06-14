@@ -28,7 +28,7 @@
 !>
 !! \brief This module provides tools to check memory usage and abort the simulation before it runs into heavy swap usage
 !!
-!! In this module following namelists of parameters are specified:
+!! In this module, the following namelists of parameters are specified:
 !! \copydetails memory_usage::init_memory
 !<
 module memory_usage
@@ -112,10 +112,10 @@ contains
    end subroutine init_memory
 
 !>
-!! \brief tell the current estimate of memory used by current thread.
+!! \brief Return the current estimate of memory used by the current thread
 !!
-!! \todo Add optional intent(in) argument with other interesting labels such as VmPeak or VmSize
-!>
+!! \todo Add optional intent(in) argument to select other interesting labels such as VmPeak or VmSize
+!<
 
    integer(kind=4) function system_mem_usage()
 
@@ -179,13 +179,13 @@ contains
    end function system_mem_usage
 
 !>
-!! \brief Check if current memory usage does not exceed the limit.
+!! \brief Check if current memory usage does not exceed the limit
 !!
-!! \detailed This routine should be called after each potentially large allocation.
-!! This may be used to crash Piernik before running into swapped memory.
+!! \details This routine should be called after each potentially large allocation.
+!! It may be used to crash PIERNIK before running into swapped memory.
 !!
-!! Cannot make a clean exit and call a restart dump from here because
-!! it is not guaranteed that each process visits this routine.
+!! Note: Cannot make a clean exit and call a restart dump from here because
+!! not all processes are guaranteed to visit this routine.
 !<
 
    subroutine check_mem_usage
