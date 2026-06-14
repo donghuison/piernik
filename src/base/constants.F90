@@ -90,13 +90,13 @@ module constants
    real, parameter :: e          = 2.718281828459045235  !< Napier's constant (base of Natural logarithm)
 
    ! some numerical representation extrema
-   !> Warning: the valuses of big and small should be used only when exceeding the range od single precision is not desired
-   !! e.g. when when using the default, 32-bit data output in .h5 files.
+   !> Warning: the values of big and small should be used only when exceeding the range of single precision is not desired
+   !! e.g. when using the default, 32-bit data output in .h5 files.
    !! In most cases it should be much safer to use tiny(1.) and huge(1.) (either directly or slightly scaled).
    !! Careless relying on SP huge and tiny may result in incorrect calculations when the involved values exceed single precision range.
    !! Such incorrect calculation may happen e.g. for extremely big or small cell sizes, extreme timestep length etc.
    real, parameter :: big        = huge(real(1.0,4))     !< a constant used as the upper limit number.
-   real, parameter :: big_float  = huge(real(1.0,4))     !< replicated temporarily 'big' for compatibility \todo choose one and convert occurrences of the other one
+   real, parameter :: big_float  = huge(real(1.0,4))     !< temporary alias for 'big' for compatibility; \todo choose one and convert all occurrences
    real, parameter :: dirtyH     = big                   !< If dirty_debug then pollute arrays with this insane value
    real, parameter :: dirtyH1    = 10.**int(log10(big))  !< this "round" dirty value makes it easier to detect which call contaminated the data
    real, parameter :: dirtyH1c   = 0.1 * dirtyH1         !< lowest value of marked dirty pollutions
@@ -136,12 +136,12 @@ module constants
    integer(kind=4), parameter :: fmt_len = 128              !< length of format string
    integer(kind=4), parameter :: fnamelen = 128             !< length of output filename
    integer(kind=4), parameter :: cbuff_len = 32             !< length for problem parameters
-   integer(kind=4), parameter :: msg_len = cbuff_len        !< length for message file paths; ToDo restore cwdlen length and handle it properly
+   integer(kind=4), parameter :: msg_len = cbuff_len        !< length for message file paths; \todo restore cwdlen and handle properly
    integer(kind=4), parameter :: units_len = 5 * cbuff_len  !< length for unit strings
    integer(kind=4), parameter :: fplen = 24                 !< length of buffer for printed FP or integer number
    integer(kind=4), parameter :: domlen = 16                !< should be <= cbuff_len
    integer(kind=4), parameter :: dsetnamelen = cbuff_len    !< length of dataset name and state variable names in hdf files
-   integer(kind=4), parameter :: idlen = 3                  !< COMMENT ME
+   integer(kind=4), parameter :: idlen = 3                  !< length of identifier strings
    integer(kind=4), parameter :: singlechar = 1             !< a single character
 
    integer(kind=4), parameter :: rep_len = 112              !< default length of "--...", "++..." and "==..." strings in the log
@@ -251,7 +251,7 @@ module constants
    character(len=dsetnamelen), parameter :: xbflx_n    = "xbflx"    !< main X face-flux array of magnetic field
    character(len=dsetnamelen), parameter :: ybflx_n    = "ybflx"    !< main Y face-flux array of magnetic field
    character(len=dsetnamelen), parameter :: zbflx_n    = "zbflx"    !< main Z face-flux array of magnetic field
-   character(len=dsetnamelen), parameter :: psiflx_n   = "psiflx"   !< main array carrying the flux of the auxillary scalar psi
+   character(len=dsetnamelen), parameter :: psiflx_n   = "psiflx"   !< main array carrying the flux of the auxiliary scalar psi
 
    ! gravitational potential
    character(len=dsetnamelen), parameter :: gp_n    = "gp"      !< static, external field, must be explicitly set to 0. if no external fields are applied
@@ -268,7 +268,7 @@ module constants
    character(len=dsetnamelen), parameter :: prth_n  = "prth"    !< histogram of particles on the grid
 #endif /* NBODY */
    ! misc
-   character(len=dsetnamelen), parameter :: wcu_n   = "wcu"     !< (resistivity) COMMENT ME
+   character(len=dsetnamelen), parameter :: wcu_n   = "wcu"     !< auxiliary array for resistivity computations
    character(len=dsetnamelen), parameter :: cs_i2_n = "cs_iso2" !< map of imposed isothermal sound speed
    character(len=dsetnamelen), parameter :: wcr_n   = "wcr"     !< auxiliary array for CR diffusion
    character(len=dsetnamelen), parameter :: wa_n    = "wa"      !< general-purpose auxiliary 3D array
