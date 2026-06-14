@@ -26,9 +26,9 @@
 !
 #include "piernik.h"
 !>
-!! \brief Initialization of the tracer fluid
+!! \brief Initialization of tracer fluids
 !!
-!! In this module following variables are defined:
+!! In this module, the following variables are defined:
 !! \n \n
 !! <table border="+1">
 !! <tr><td width="150pt"><b>variable</b></td><td width="135pt"><b>type</b></td><td width="200pt"><b>description</b></td></tr>
@@ -55,7 +55,10 @@ module inittracer
 contains
 
 !>
-!! \brief Routine to set parameter values from namelist FLUID_TRACER
+!! \brief Read tracer fluid parameters from namelist and broadcast via MPI
+!!
+!! Reads the FLUID_TRACER namelist from the configuration file and broadcasts
+!! the parameters to all MPI processes.
 !!
 !! \n \n
 !! @b FLUID_TRACER
@@ -140,13 +143,13 @@ contains
       endif
       if (master) call printinfo(msg, V_INFO)
 
-      ! TODO: deallocate this array somewhere
       allocate(iarr_trc(ntracers))
 
    end subroutine init_tracer
 
-!> \brief Routine to deallocate arrays related to tracer fluids
-
+!> \brief Deallocate tracer fluid arrays
+!!
+!! Deallocates arrays allocated during initialization.
    subroutine cleanup_tracer
 
       implicit none
@@ -156,8 +159,9 @@ contains
 
    end subroutine cleanup_tracer
 
-!> \brief Routine to set indices of tracer fluids in the main data array
-
+!> \brief Set indices of tracer fluids in the main data array
+!!
+!! Assigns index ranges for tracer fluid variables and computes the iarr_trc array.
    subroutine tracer_index(flind)
 
       use constants,  only: I_ONE
@@ -175,7 +179,8 @@ contains
 
       iarr_trc = int([(i, i = 0, ntracers-1)], kind=4) + flind%trc%beg
 
-      ! Tracers are initialized at the end so nothing else depends on these auxiliary fields
+      ! Tracer index position is set to -1 since tracers are initialized last
+      ! and no other components depend on their index position
 !      flind%components = flind%components + 1
 !      flind%trc%pos    = flind%components
       flind%trc%pos    = -1
