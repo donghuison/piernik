@@ -113,7 +113,7 @@ contains
       warned = .true.
 #endif /* MAGNETIC */
 
-      if (dom%geometry_type /= GEO_XYZ) call die("[URC_Jeans:mark_Jeans] unsupported (non-cartesian) geometry")
+      if (dom%geometry_type /= GEO_XYZ) call die("[URC_Jeans:mark_Jeans] unsupported (non-Cartesian) geometry")
 
       if (this%iplot /= INVALID) then
          p3d => cg%q(this%iplot)%arr

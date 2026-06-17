@@ -241,9 +241,9 @@ contains
          endif
          call printinfo(msg, V_VERBOSE)
          if (ic /= INVALID) then
-            if (.not. wna%lst(iv)%vital) call warn("[URC_var:init] 4D field '" // trim(wna%lst(iv)%name) // "' is not vital. Please make sure that the guardcells are properly updater for refinement update.")
+            if (.not. wna%lst(iv)%vital) call warn("[URC_var:init] 4D field '" // trim(wna%lst(iv)%name) // "' is not vital. Please make sure that the guardcells are properly updated for refinement updates.")
          else
-            if (.not. qna%lst(iv)%vital) call warn("[URC_var:init] 3D field '" // trim(qna%lst(iv)%name) // "' is not vital. Please make sure that the guardcells are properly updater for refinement update.")
+            if (.not. qna%lst(iv)%vital) call warn("[URC_var:init] 3D field '" // trim(qna%lst(iv)%name) // "' is not vital. Please make sure that the guardcells are properly updated for refinement updates.")
          endif
       endif
 
@@ -356,7 +356,7 @@ contains
 !! this%aux is the noise filter (epsilon in Loechner's paper)
 !!
 !! Known limitations:
-!! * Extremely small and big cell sizes easily cause FP over- and underflows. Don't go much beyond 1e±70.
+!! * Extremely small and large cell sizes easily cause FP overflows and underflows. Don't go much beyond 1e±70.
 !!
 !! OPT: this routine seems to take way too much CPU! Implement 3D variant without functions?
 !!
@@ -382,11 +382,11 @@ contains
       character(len=*), parameter :: L_label = "Loechner_mark"
 
       call ppp_main%start(L_label, PPP_AMR + PPP_CG)
-      if (dom%geometry_type /= GEO_XYZ) call die("[URC_var:refine_on_second_derivative] noncartesian geometry not supported yet")
+      if (dom%geometry_type /= GEO_XYZ) call die("[URC_var:refine_on_second_derivative] non-Cartesian geometry not supported yet")
       if (dom%nb <= how_far+I_ONE) then
          write(msg, '(a,i1,a)')"[URC_var:refine_on_second_derivative] at least ", how_far+I_ONE+I_ONE, " guardcells are required"
          ! dux(i+I_ONE, j, k) is accessing p3d(i+I_ONE+I_ONE, j, k), so for i = cg%ie + how_far*dom%D_x means that dom%nb has to be at least 4
-         ! ToDo: check if it is safe to reduce how_far and avoid refinement flickering
+         ! ToDo: check if it is safe to reduce how_far to avoid refinement flickering
          call die(msg)
       endif
 
@@ -505,7 +505,7 @@ contains
 
 !>
 !! \brief Refinement based on ||grad u||
-!! This is sensitive to gradients, but the thresholds must be rescaled, when you change units of the problem.
+!! This is sensitive to gradients, but the thresholds must be rescaled when you change the units of the problem.
 !<
 
    subroutine refine_on_gradient(this, cg, p3d)
@@ -562,7 +562,7 @@ contains
       !>
       !! \brief Square of a gradient without taking into account cell sizes
       !!
-      !! \details Perhaps it is not gradient but rather a norm of 3D difference
+      !! \details Perhaps it is not a gradient, but rather a norm of the 3D difference
       !<
 
       elemental real function grad2(i, j, k)
@@ -585,7 +585,7 @@ contains
 
 !>
 !! \brief Refinement based on ||grad u||/||u||
-!! This is sensitive to changes of sign or strong gradients (such as fast approaching 0.)
+!! This is sensitive to changes of sign or strong gradients (such as fast approaching 0).
 !<
 
    subroutine refine_on_relative_gradient(this, cg, p3d)
@@ -642,7 +642,7 @@ contains
       !>
       !! \brief Square of a 'relative gradient' without taking into account cell sizes
       !!
-      !! \details This routine should return value between 0 and 1.
+      !! \details This routine should return a value between 0 and 1.
       !<
 
       elemental real function rel_grad2(i, j, k)
@@ -675,9 +675,9 @@ contains
       !>
       !! \brief Return 'relative gradient' defined as |a - b| / (|a| + |b|)
       !!
-      !! \details This routine should return value between 0 and 1.
-      !! rel_grad_1pair == 0 when a == b, also when a == b == 0
-      !! rel_grad_1pair == 1 when one argument == 0 and the other /= 0
+      !! \details This routine should return a value between 0 and 1.
+      !! rel_grad_1pair == 0 when a == b, as well as when a == b == 0.
+      !! rel_grad_1pair == 1 when one argument == 0 and the other /= 0.
       !! rel_grad_1pair == 1 when a*b < 0
       !<
 
@@ -698,7 +698,7 @@ contains
       end function rel_grad_1pair
 
       !>
-      !! \brief square of an 'addition' of two numbers from [0, 1] range.
+      !! \brief Square of an 'addition' of two numbers in the range [0, 1].
       !!
       !! \details Let us define a (+) b so it obeys the following rules:
       !! a (+) b = b (+) a
@@ -706,7 +706,7 @@ contains
       !! a (+) 1 = 1
       !! if a << 1 and b << 1, a (+) b \simeq sqrt(a**2 + b**2)
       !!
-      !! One of possible formulas is:
+      !! One possible formula is:
       !! a (+) b = sqrt(a**2 - a**2 * b**2 + b**2)
       !! Note that: (a (+) b) (+) c = a (+) (b (+) c) = sqrt( (a (+) b)**2 * (1 - c**2) + c**2)
       !! That's why this routine returns (a (+) b)**2 for best performance when 'adding' multiple numbers.

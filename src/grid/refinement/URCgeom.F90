@@ -49,7 +49,7 @@ module unified_ref_crit_geometrical
       integer :: level  !< desired level of refinement
    contains
       procedure :: enough_level       !< Level check for all dependent types.
-      procedure, nopass :: coord2ind  !< Convert cordinates to indices.
+      procedure, nopass :: coord2ind  !< Convert coordinates to indices.
    end type urc_geom
 
 contains
