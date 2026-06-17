@@ -197,7 +197,7 @@ contains
 
       implicit none
 
-      class(urc_list_t), intent(inout) :: this   !< an object invoking the type-bound procedure
+      class(urc_list_t), intent(in) :: this   !< an object invoking the type-bound procedure
 
       logical, save :: first_run = .true.
 
@@ -294,7 +294,7 @@ contains
       p => this%first
       do while (associated(p))
          select type (p)
-            class is (urc_var)
+            type is (urc_var)
                if (p%plotfield .and. p%iplot == INVALID) then
                   p%iplot = new_ref_field()
                   write(msg, '(3a)') "[URC_list:create_plotfields] refinement criterion of type '", trim(p%rname), "' for '"
@@ -306,20 +306,20 @@ contains
                   write(msg(len_trim(msg)+1:), '(3a)') "' is stored in array '", trim(ref_n), "'"
                   if (master) call printinfo(msg, V_VERBOSE)
                endif
-            class is (urc_jeans)
+            type is (urc_jeans)
                if (p%plotfield .and. p%iplot == INVALID) then
                   p%iplot = new_ref_field("nJ")
                   write(msg, '(3a)') "[URC_list:create_plotfields] Jeans refinement criterion is stored in array '", trim(ref_n), "'"
                   if (master) call printinfo(msg, V_VERBOSE)
                endif
-            class is (urc_nbody)
+            type is (urc_nbody)
                ! unused at the moment of implementation
                if (p%plotfield .and. p%iplot == INVALID) then
                   p%iplot = new_ref_field("nparticles")
                   write(msg, '(3a)') "[URC_list:create_plotfields] particle count criterion is stored in array '", trim(ref_n), "'"
                   if (master) call printinfo(msg, V_VERBOSE)
                endif
-            class is (urc_user)
+            type is (urc_user)
                if (p%plotfield .and. p%iplot == INVALID) then
                   p%iplot = new_ref_field()
                   write(msg, '(3a)') "[URC_list:create_plotfields] user-provided refinement criterion is stored in array '", trim(ref_n), "'"
@@ -382,7 +382,7 @@ contains
 
       implicit none
 
-      class(urc_list_t), intent(inout) :: this  !< an object invoking the type-bound procedure
+      class(urc_list_t), intent(in) :: this  !< an object invoking the type-bound procedure
 
       class(urc), pointer :: p
       integer :: cnt
