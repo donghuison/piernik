@@ -295,7 +295,7 @@ contains
       do while (associated(p))
          select type (p)
             type is (urc_var)
-               if (p%plotfield .and. p%iplot == INVALID) then
+               if (p%get_plotfield() .and. p%iplot == INVALID) then
                   p%iplot = new_ref_field()
                   write(msg, '(3a)') "[URC_list:create_plotfields] refinement criterion of type '", trim(p%rname), "' for '"
                   if (p%ic /= INVALID) then
@@ -307,14 +307,14 @@ contains
                   if (master) call printinfo(msg, V_VERBOSE)
                endif
             type is (urc_jeans)
-               if (p%plotfield .and. p%iplot == INVALID) then
+               if (p%get_plotfield() .and. p%iplot == INVALID) then
                   p%iplot = new_ref_field("nJ")
                   write(msg, '(3a)') "[URC_list:create_plotfields] Jeans refinement criterion is stored in array '", trim(ref_n), "'"
                   if (master) call printinfo(msg, V_VERBOSE)
                endif
             type is (urc_nbody)
                ! unused at the moment of implementation
-               if (p%plotfield .and. p%iplot == INVALID) then
+               if (p%get_plotfield() .and. p%iplot == INVALID) then
                   p%iplot = new_ref_field("nparticles")
                   write(msg, '(3a)') "[URC_list:create_plotfields] particle count criterion is stored in array '", trim(ref_n), "'"
                   if (master) call printinfo(msg, V_VERBOSE)

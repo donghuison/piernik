@@ -67,8 +67,7 @@ contains
 
       type(urc_nbody) :: this  !< an object to be constructed
 
-      this%ref_thr   = nbody_ref
-      this%plotfield = .false.
+      call this%set_filter_params(real(nbody_ref), .false.)
 
    end function init
 
@@ -100,7 +99,7 @@ contains
       integer :: i, j, k
       type(particle), pointer :: part
 
-      if (cg%pset%cnt + sum(cg%chld_pcnt) >= this%ref_thr/I_TWO**ndims) then
+      if (cg%pset%cnt + sum(cg%chld_pcnt) >= this%get_ref_thr()/I_TWO**ndims) then
          oct_cnt = I_ZERO
          part => cg%pset%first
          do while (associated(part))
@@ -120,7 +119,7 @@ contains
                do k = LO, HI
                   ! Looks like some particles remain non-prolonged during IC. Later it works correctly.
                   ! This bug is also visible on the nbdn field of the 0-th dump
-                  if (oct_cnt(i, j, k) + cg%chld_pcnt(i, j, k) > this%ref_thr) then
+                  if (oct_cnt(i, j, k) + cg%chld_pcnt(i, j, k) > this%get_ref_thr()) then
                      call cg%flag%set(cg%ijkse(xdim, i), cg%ijkse(ydim, j), cg%ijkse(zdim, k))
                      oct_cnt(i, j, k) = I_ZERO
                   endif
@@ -128,11 +127,11 @@ contains
             enddo
          enddo
 
-         ! if (sum(oct_cnt) > this%ref_thr) call warn("[URC_nbody:mark_nbody] Too many particles left in non-refined region")
+         ! if (sum(oct_cnt) > this%get_ref_thr()) call warn("[URC_nbody:mark_nbody] Too many particles left in non-refined region")
 
       endif
 #else /*  !(GRAV && NBODY) */
-      if (.false.) this%ref_thr = this%ref_thr + cg%grid_id
+      if (.false.) call this%set_filter_params(this%get_ref_thr() + cg%grid_id, .false.)
 #endif /* GRAV && NBODY */
 
    end subroutine mark_nbody

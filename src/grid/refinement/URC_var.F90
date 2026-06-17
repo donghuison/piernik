@@ -248,8 +248,7 @@ contains
       endif
 
       ! urc_filter
-      this%ref_thr   = rf%ref_thr
-      this%plotfield = rf%plotfield
+      call this%set_filter_params(rf%ref_thr, rf%plotfield)
 
       ! own components
       this%iv = iv
@@ -337,7 +336,7 @@ contains
             do i = cg%is, cg%ie
                r = p3d(i, j, k)
                if (this%iplot /= INVALID) cg%q(this%iplot)%arr(i, j, k) = r
-               if (r >= this%ref_thr) call cg%flag%set(i, j, k)
+               if (r >= this%get_ref_thr()) call cg%flag%set(i, j, k)
             enddo
          enddo
       enddo
@@ -450,7 +449,7 @@ contains
                endif
                if (this%iplot /= INVALID) cg%q(this%iplot)%arr(i, j, k) = r
 
-               if (r >= this%ref_thr) call cg%flag%set(i, j, k)
+               if (r >= this%get_ref_thr()) call cg%flag%set(i, j, k)
 
             enddo
          enddo
@@ -529,7 +528,7 @@ contains
             do i = cg%is, cg%ie
                r = grad2(i, j, k)
                if (this%iplot /= INVALID) cg%q(this%iplot)%arr(i, j, k) = r
-               if (r >= this%ref_thr**2) call cg%flag%set(i, j, k)
+               if (r >= this%get_ref_thr()**2) call cg%flag%set(i, j, k)
                ! we can avoid calculating square root here
             enddo
          enddo
@@ -609,7 +608,7 @@ contains
             do i = cg%is, cg%ie
                r = rel_grad2(i, j, k)
                if (this%iplot /= INVALID) cg%q(this%iplot)%arr(i, j, k) = r
-               if (r >= this%ref_thr**2) call cg%flag%set(i, j, k)
+               if (r >= this%get_ref_thr()**2) call cg%flag%set(i, j, k)
                ! we can avoid calculating square root here
             enddo
          enddo
