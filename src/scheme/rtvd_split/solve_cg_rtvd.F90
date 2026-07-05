@@ -32,7 +32,6 @@
 
 module solvecg_rtvd
 
-! pulled by ANY
 
    implicit none
 

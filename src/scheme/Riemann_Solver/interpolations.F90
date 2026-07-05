@@ -34,7 +34,6 @@
 
 module interpolations
 
-! pulled by ANY
 
    implicit none
 

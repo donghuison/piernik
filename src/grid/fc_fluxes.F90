@@ -44,7 +44,6 @@
 
 module fc_fluxes
 
-! pulled by ANY
 
    implicit none
 

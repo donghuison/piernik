@@ -26,7 +26,7 @@
 !
 #include "piernik.h"
 
-!> \brief Routine for calculating whether two rectangular segments do overlap
+!> \brief Check if two rectangular segments overlap
 
 module overlap
 
@@ -42,9 +42,10 @@ module overlap
 contains
 
 !>
-!! \brief is_overlap_per checks if two given blocks placed within a periodic domain are overlapping.
+!! \brief Check if two blocks in a periodic domain are overlapping
 !!
-!! \details to handle shearing box which is divided in y-direction at the edges, one has to provide another subroutine (is_overlap_per_shear) and add it to interface is_overlap
+!! \details For shearing boxes divided at domain edges, an additional subroutine
+!! (is_overlap_per_shear) may be needed and added to the is_overlap interface.
 !<
 
    pure logical function is_overlap_per(this, other, periods) result(share)
@@ -82,8 +83,10 @@ contains
    end function is_overlap_per
 
 !>
-!! \brief is_overlap_simple checks if two given blocks placed within a nonperiodic domain are overlapping.
-!! This routine is not supposed to take care of periodic domain - use is_overlap_per when you check overlap for boxes that cross the periodic domain boundary
+!! \brief Check if two blocks in a non-periodic domain are overlapping
+!!
+!! \details This routine does not handle periodic domain boundaries.
+!! Use is_overlap_per to check overlap for boxes that cross periodic boundaries.
 !<
 
    pure logical function is_overlap_simple(this, other) result(share)

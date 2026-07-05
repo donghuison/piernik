@@ -28,7 +28,6 @@
 
 module unsplit_source
 
-! pulled by ANY
 
    implicit none
 

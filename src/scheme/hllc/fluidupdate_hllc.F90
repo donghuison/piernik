@@ -31,7 +31,6 @@
 !! \deprecated BEWARE: this module only care about neutral fluid
 !<
 module fluidupdate_hllc   ! SPLIT MUSCL HANCOCK
-! pulled by ANY
 
    implicit none
    private

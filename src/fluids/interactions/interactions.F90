@@ -33,7 +33,6 @@
 !! \copydetails interactions::init_interactions
 !<
 module interactions
-! pulled by ANY
 
    use constants, only: cbuff_len
 

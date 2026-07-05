@@ -26,7 +26,7 @@
 !
 #include "piernik.h"
 
-!> \brief Call inits and cleanups for MPI wrappers
+!> \brief Initialize and clean up MPI wrapper statistics counters
 
 module wrapper_stats
 
@@ -72,7 +72,7 @@ contains
 
       implicit none
 
-      ! Be nice to the stream of finalization dots on stdout
+      ! Be nice to the stream of finalization dots on stdout by adding a newline
       if (master .and. (piernik_verbosity <= V_DEBUG)) write(stdout,'()')
 
       if (master) call printinfo("Collected counters (for master only):", V_DEBUG)

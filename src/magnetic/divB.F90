@@ -31,7 +31,6 @@
 !<
 
 module div_B
-! pulled by ANY
 ! originally it was 'by MAGNETIC' but I think I the future we may choose to drop most #define, including MAGNETIC
 
    use constants, only: dsetnamelen, INVALID

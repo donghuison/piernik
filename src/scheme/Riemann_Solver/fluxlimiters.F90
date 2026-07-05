@@ -36,7 +36,6 @@
 
 module fluxlimiters
 
-! pulled by ANY
 
    implicit none
    private

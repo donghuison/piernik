@@ -33,7 +33,6 @@
 
 module hdc
 
-! pulled by ANY
 
    use constants, only: dsetnamelen, INVALID
 

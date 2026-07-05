@@ -29,7 +29,6 @@
 !! Main program
 !<
 program piernik
-! pulled by ANY
 
    use allreduce,         only: piernik_MPI_Allreduce
    use barrier,           only: piernik_MPI_Barrier

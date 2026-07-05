@@ -78,9 +78,9 @@ contains
       integer :: i
 
       ! n=2 is an edge case: [ < min, >= min ]
-      if (n < 2) call die("[log_bins:init] nonsense: this is a counter, not bins")
+      if (n < 2) call die("[log_bins:init] At least 2 bins are required")
 
-      if (width <= 1.) call die("[log_bins:init] nonsense: width of logarithmic bins has to be > 1.")
+      if (width <= 1.) call die("[log_bins:init] Width must be greater than 1 for logarithmic bins")
 
       this%min = min
       this%lwidth = log(width)
@@ -118,7 +118,7 @@ contains
 
       integer :: ind
 
-      ! ToDo: binary search would be faster for large arrays
+      ! \todo Binary search would be faster for large arrays
       if (val >= this%bnd(ubound(this%bnd, 1))) then
          ind = this%n
       else
@@ -146,12 +146,12 @@ contains
 
       integer :: maxn
       integer(LONG), dimension(this%n) :: bindata
-      character(len=fmt_len) :: fmt  ! for formats like '(a,5(' ',i3,'(',i3,')'))'
+      character(len=fmt_len) :: fmt  ! Format string for output (e.g., '(a,5(' ',i3,'(',i3,')'))')
 
       call printinfo(trim(title), v)
 
-      ! Since msg has finite length we may run into errors here for large bin sets.
-      maxn = min(this%n, int(len(msg) / 13.) - 1)  ! 13 is the current width occupied by one entry, with spacing
+      ! Limit output to fit within msg buffer length; assume that each entry occupies at most 13 characters
+      maxn = min(this%n, int(len(msg) / 13.) - 1)
       if (maxn < this%n) then
          write(msg, '(a,2(i0,a))')"[log_bins:print] only first ", maxn, " out of ", this%n, " can be printed"
          call warn(msg)

@@ -46,7 +46,6 @@
 !<
 
 module fluidupdate   ! SPLIT
-! pulled by ANY
 
    implicit none
 

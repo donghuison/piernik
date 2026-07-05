@@ -33,7 +33,6 @@
 
 module unsplit_fluidupdate
 
-! pulled by ANY
 
    implicit none
 

@@ -28,7 +28,6 @@
 
 module solvecg_unsplit
 
-! pulled by ANY
 
    implicit none
 

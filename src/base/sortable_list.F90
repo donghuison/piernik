@@ -27,7 +27,7 @@
 
 #include "piernik.h"
 
-!> \brief Module that contains a general sorting routine. To be extended for other more sophisticated structures
+!> \brief Module that contains a general sorting routine, extensible for more sophisticated structures
 
 module sortable_list
 
@@ -83,7 +83,7 @@ module sortable_list
 
 contains
 
-!> \brief deallocate everything locally allocated
+!> \brief Deallocate locally allocated arrays
 
    subroutine cleanup_sortable_list
 
@@ -121,21 +121,20 @@ contains
       endif
 
       do while (gaps(ubound(gaps, dim=1)) < ub)
-         ! This is quite short list, so we can afford for slowest, simplest algorithm here
+         ! This is a quite short list, so we can afford the slowest, simplest algorithm here
          gaps = [ gaps, tokuda(ubound(gaps, dim=1)+1) ]
       enddo
 
       do g = ubound(gaps, dim=1), lbound(gaps, dim=1), -1
          do i = gaps(g)+1, ub
-            call this%assign_element(temp_index, i) !this%temp = this%list(i)
+            call this%assign_element(temp_index, i)  ! temporary = list(i)
             j = i
-!            do while (j > gaps(g) .and. this%list(max(j - gaps(g), lbound(this%list, dim=1)))%id > temp%id)
             do while (j > gaps(g) .and. this%compare_elements(max(j - gaps(g), lb), temp_index))
-               ! Either use max() here, or put this%list(j - gaps(g)) with an "if" inside the while loop
-               call this%assign_element(j, j-gaps(g)) !this%list(j) = this%list(j - gaps(g))
+               ! Shift element one gap position to the right
+               call this%assign_element(j, j-gaps(g))  ! list(j) = list(j - gaps(g))
                j = j - gaps(g)
             enddo
-            call this%assign_element(j, temp_index) !this%list(j) = this%temp
+            call this%assign_element(j, temp_index)  ! list(j) = temporary
          enddo
       enddo
 
@@ -145,7 +144,7 @@ contains
 
    contains
 
-      !> \brief Return k-th gap according to Tokuda prescription
+      !> \brief Compute the k-th gap according to Tokuda prescription
 
       integer function tokuda(k)
 
@@ -162,7 +161,7 @@ contains
       end function tokuda
 
 #ifdef DEBUG
-      !> \brief Check if our sorting was performed correctly
+      !> \brief Verify that sorting was performed correctly
 
       subroutine check
 

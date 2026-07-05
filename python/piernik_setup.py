@@ -393,7 +393,6 @@ def setup_piernik(data=None):
             print(defin)
 
     our_defs = [f.split(" ")[1] for f in filter(cpp_junk.match, defines)]
-    our_defs.append("ANY")
     if (options.verbose):
         print("our_defs:")
         print(our_defs)

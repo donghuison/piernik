@@ -37,7 +37,6 @@
 !<
 
 module initionized
-! pulled by ANY
    use fluidtypes, only: component_fluid
    implicit none
 

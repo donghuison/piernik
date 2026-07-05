@@ -32,7 +32,7 @@
 !!
 !! Putting refinement on cg where a lot of particles reside can be justified in two ways:
 !! * If there are a lot of particles, then maybe something worth resolving is going on.
-!! * Refining crowded cg may let improve load balancing a bit because chances are that the resulting particle sets will be less numerous.
+!! * Refining crowded cgs may help improve load balancing because the resulting particle sets will be less numerous.
 !<
 
 module unified_ref_crit_nbody
@@ -67,15 +67,14 @@ contains
 
       type(urc_nbody) :: this  !< an object to be constructed
 
-      this%ref_thr   = nbody_ref
-      this%plotfield = .false.
+      call this%set_filter_params(real(nbody_ref), .false.)
 
    end function init
 
 !>
 !! \brief implementation of refinement criterion based on the number of particles
 !!
-!! Mark for refinement only selected octants (quadrants, halves in lower dimensions), where the particle count exceeds the threshold
+!! Mark for refinement only selected octants (quadrants, halves in lower dimensions) where the particle count exceeds the threshold
 !!
 !! This routine has to conform to unified_ref_crit_user::mark_urc_user
 !<
@@ -100,7 +99,7 @@ contains
       integer :: i, j, k
       type(particle), pointer :: part
 
-      if (cg%pset%cnt + sum(cg%chld_pcnt) >= this%ref_thr/I_TWO**ndims) then
+      if (cg%pset%cnt + sum(cg%chld_pcnt) >= this%get_ref_thr()/I_TWO**ndims) then
          oct_cnt = I_ZERO
          part => cg%pset%first
          do while (associated(part))
@@ -112,15 +111,15 @@ contains
             part => part%nxt
          enddo
 
-         ! mark the octants with big particle count
+         ! mark the octants with high particle count
          ! To prevent refinement blinking we have to set flags under those children who have enough particles.
          ! The cg%chld_pcnt has to be updated at this point (non-local operation).
          do i = LO, HI
             do j = LO, HI
                do k = LO, HI
-                  ! Looks like some particles remain nonprolonged during IC. Later it works correctly.
+                  ! Looks like some particles remain non-prolonged during IC. Later it works correctly.
                   ! This bug is also visible on the nbdn field of the 0-th dump
-                  if (oct_cnt(i, j, k) + cg%chld_pcnt(i, j, k) > this%ref_thr) then
+                  if (oct_cnt(i, j, k) + cg%chld_pcnt(i, j, k) > this%get_ref_thr()) then
                      call cg%flag%set(cg%ijkse(xdim, i), cg%ijkse(ydim, j), cg%ijkse(zdim, k))
                      oct_cnt(i, j, k) = I_ZERO
                   endif
@@ -128,11 +127,11 @@ contains
             enddo
          enddo
 
-         ! if (sum(oct_cnt) > this%ref_thr) call warn("[URC_nbody:mark_nbody] Too many particles left in non-refined region")
+         ! if (sum(oct_cnt) > this%get_ref_thr()) call warn("[URC_nbody:mark_nbody] Too many particles left in non-refined region")
 
       endif
 #else /*  !(GRAV && NBODY) */
-      if (.false.) this%ref_thr = this%ref_thr + cg%grid_id
+      if (.false.) call this%set_filter_params(this%get_ref_thr() + cg%grid_id, .false.)
 #endif /* GRAV && NBODY */
 
    end subroutine mark_nbody

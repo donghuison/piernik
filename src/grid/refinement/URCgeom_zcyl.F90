@@ -28,7 +28,7 @@
 #include "piernik.h"
 
 !>
-!! \brief Unified refinement criterion for a cylinder with axis in the z-direction that fits to a simple box.
+!! \brief Unified refinement criterion for a cylinder with its axis in the z-direction that fits inside a simple box.
 !!
 !! It is also a good starting point for anyone who wants to implement ellipsoidal geometrical refinement.
 !<
@@ -51,7 +51,7 @@ module unified_ref_crit_geometrical_zcyl
       real, dimension(ndims), private                        :: size    !< x- and y-radius (elliptical cylinders are allowed) and half-height
       integer(kind=8), allocatable, dimension(:, :), private :: ijk_lo  !< integer coordinates of "bottom left corner" at allowed levels; shape: [ base_level_id:this%level-1, ndims ]
       integer(kind=8), allocatable, dimension(:, :), private :: ijk_hi  !< integer coordinates of "top right corner" at allowed levels; shape: [ base_level_id:this%level-1, ndims ]
-      integer(kind=8), allocatable, dimension(:, :), private :: ijk_c   !< integer coordinates of center at allowed levels; shape: [ base_level_id:this%level-1, ndims ], required for ultra small cylinders that could be lost between cells.
+      integer(kind=8), allocatable, dimension(:, :), private :: ijk_c   !< integer coordinates of center at allowed levels; shape: [ base_level_id:this%level-1, ndims ], required for ultra-small cylinders that could be lost between cells.
    contains
       procedure          :: mark => mark_zcyl
       procedure, private :: init_lev
@@ -108,7 +108,7 @@ contains
 !>
 !! \brief Mark a z-oriented cylinder inside a specified box in the domain for refinement.
 !!
-!! Please note that it uses grid topology, so in GEO_RPZ may result in funny shapes, especially for "cylinders" extended in angular direction.
+!! Please note that it uses grid topology, so in GEO_RPZ it may result in funny shapes, especially for "cylinders" extended in the angular direction.
 !!
 !! \details this%iplot is ignored here, maybe it isn't that uninteresting and should be handled.
 !<
@@ -152,7 +152,7 @@ contains
          enddo
       endif
 
-      ! For ultra-thin and ultra-small cylinders mark at least their center, maybe at higher levels the resolution will help
+      ! For ultra-thin and ultra-small cylinders, mark at least their center; perhaps the resolution at higher levels will help.
       if (all(this%ijk_c(cg%l%id, :) >= cg%ijkse(:, LO)) .and. all(this%ijk_c(cg%l%id, :) <= cg%ijkse(:, HI))) &
            call cg%flag%set(this%ijk_c(cg%l%id, :))
 

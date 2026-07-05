@@ -29,7 +29,6 @@
 !! \brief Module containing a routine to compute upper limit of %timestep due to fluids %interactions.
 !<
 module timestepinteractions
-! pulled by ANY
    implicit none
    private
    public :: timestep_interactions

@@ -26,7 +26,7 @@
 !
 #include "piernik.h"
 
-!> \brief Type for handling array of tag arrays separately for send and receive operations.
+!> \brief Handle send and receive tag arrays separately for each operation
 
 module tag_arrays
 
@@ -41,16 +41,16 @@ module tag_arrays
    type :: tag_arrs
       type(tag_arr) :: ts  !< list of "send" tags for each proc in current communication
       type(tag_arr) :: tr  !< list of "recv" tags for each proc in current communication
-      character(len = cbuff_len) :: label  !< identificator
+      character(len = cbuff_len) :: label  !< identifier
    contains
-      procedure :: cleanup    !< find problems and free the resources
+      procedure :: cleanup    !< check for problems and free the resources
       procedure :: store_tag  !< store tags for inspection upon Waitall
       procedure :: set_label  !< set the label
    end type tag_arrs
 
 contains
 
-!> \brief clean up
+!> \brief Clean up stored tags and free resources
 
    subroutine cleanup(this)
 
@@ -63,7 +63,7 @@ contains
 
    end subroutine cleanup
 
-!> brief Accumulate tags for inspection
+!> \brief Accumulate tags for inspection
 
    subroutine store_tag(this, tag, other_proc, n, recv)
 

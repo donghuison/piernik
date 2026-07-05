@@ -70,8 +70,7 @@ contains
 
       type(urc_jeans) :: this  !< an object to be constructed
 
-      this%ref_thr   = jeans_ref
-      this%plotfield = jeans_plot
+      call this%set_filter_params(jeans_ref, jeans_plot)
 
    end function init
 
@@ -113,7 +112,7 @@ contains
       warned = .true.
 #endif /* MAGNETIC */
 
-      if (dom%geometry_type /= GEO_XYZ) call die("[URC_Jeans:mark_Jeans] unsupported (non-cartesian) geometry")
+      if (dom%geometry_type /= GEO_XYZ) call die("[URC_Jeans:mark_Jeans] unsupported (non-Cartesian) geometry")
 
       if (this%iplot /= INVALID) then
          p3d => cg%q(this%iplot)%arr
@@ -151,7 +150,7 @@ contains
          p3d(:,:,:) = sqrt(pi/newtong) / maxval(cg%dl) * sqrt(p3d)/ sum(cg%u(iarr_all_sg, :, :, :), dim=1)
       endif
 
-      call cg%flag%set(p3d < this%ref_thr)
+      call cg%flag%set(p3d < this%get_ref_thr())
 
    end subroutine mark_Jeans
 

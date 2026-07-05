@@ -29,7 +29,6 @@
 !! \brief Definitions of compound types for fluids
 !<
 module fluidtypes
-! pulled by ANY
    use types,     only: value
 
    implicit none

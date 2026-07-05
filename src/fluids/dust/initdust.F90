@@ -36,7 +36,6 @@
 !<
 
 module initdust
-! pulled by ANY
    use fluidtypes, only: component_fluid
    implicit none
 

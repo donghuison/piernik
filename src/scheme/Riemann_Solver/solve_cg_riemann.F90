@@ -54,7 +54,6 @@
 
 module solvecg_riemann
 
-! pulled by ANY
 
    implicit none
 
