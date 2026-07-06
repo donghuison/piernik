@@ -72,14 +72,17 @@ if [ ! -e ${RUN_GOLD_DIR}${OUTPUT} ] ; then
     # Use current setup script and compilers configuration
     git clone -q $PIERNIK_REPO $GOLD_CLONE
     [ -e .setuprc ] && cp .setuprc $GOLD_CLONE
-    cp python/piernik_setup.py ${GOLD_CLONE}/python/piernik_setup_today.py
+    SETUP_TO_USE=python/piernik_setup.py
+    # In case of rapidly evolving setup script, one can use current copy of the setup script
+    # cp python/piernik_setup.py ${GOLD_CLONE}/python/piernik_setup_today.py
+    # SETUP_TO_USE=python/piernik_setup_today.py
     (
 	cd $GOLD_CLONE
 	[ -e __error__ ] && rm __error__
 	git fetch -q $PIERNIK_REPO +refs/pull/*:refs/remotes/origin/pr/*
 	git checkout -q $GOLD_COMMIT || ( echo "Error: Unable to checkout GOLD_COMMIT – make sure it has been pushed to github" > __error__; exit 3 )
 	rsync -avxq --delete "${BASE_DIR}"/compilers/ ./compilers
-	python3 python/piernik_setup_today.py $PROBLEM_NAME $SETUP_PARAMS -o $FLAT_PROBLEM_NAME  # prepares $OBJ in $GOLD_DIR
+	python3 ${SETUP_TO_USE} $PROBLEM_NAME $SETUP_PARAMS -o $FLAT_PROBLEM_NAME  # prepares $OBJ in $GOLD_DIR
     )
     if [ -e ${GOLD_CLONE}/__error__ ] ; then
 	cat ${GOLD_CLONE}/__error__ 1>&2
